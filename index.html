@@ -12,12 +12,14 @@
     <main>
       <div class="left">
         <div class="register">
+          <div class="notification success" id="success"> Rejestracja zakończona sukcesem! </div>
+          <div class="notification failed" id="failed"></div>
           <p>Zarejestruj się</p>
-          <button>
-            <img src="./images/png/fb.png"/>rejestracja przez Facebook
+          <button class="tooltip">
+            <img src="./images/png/fb.png" />rejestracja przez Facebook
           </button>
-          <button>
-            <img src="./images/png/insta.png"/>rejestracja przez Instagram
+          <button class="tooltip">
+            <img src="./images/png/insta.png" />rejestracja przez Instagram
           </button>
           <div class="lineWrapper first">
             <div class="line"></div>
@@ -83,6 +85,9 @@
         </div>
       </div>
     </main>
+    <div id="popup" class="popup">
+      <span class="loader"></span>
+    </div>
     <script src="register.js"></script>
   </body>
 </html>

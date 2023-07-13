@@ -1,3 +1,5 @@
+const BASE_URL = "https://ds-elp2-be.herokuapp.com/";
+
 const form = document.getElementById("form");
 const firstName = document.querySelector("#firstName");
 const lastName = document.querySelector("#lastName");
@@ -5,11 +7,23 @@ const email = document.querySelector("#email");
 const password = document.querySelector("#password");
 const terms = document.querySelector("#terms");
 
+const main = document.querySelector("main");
+const popup = document.querySelector("#popup");
+
+const success = document.getElementById("success");
+const failed = document.getElementById("failed");
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   if (validateRegisterForm()) {
-   console.log("request")
+    const data = {
+      email: email.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+      password: password.value,
+    };
+    register(data);
+    localStorage.setItem("registered_email", email.value);
   } else {
     console.log("no request - validation error");
   }
@@ -92,3 +106,46 @@ function validateRegisterForm() {
   }
   return shouldProceed(proceed);
 }
+
+async function register(data) {
+  try {
+    const response = await fetch(`${BASE_URL}auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (response.status === 200) {
+      const result = await response.json();
+      console.log(result);
+      handleSuccess();
+    } else if (response.status === 403) {
+      handleFailure("Taki user istnieje, użyj innego maila");
+      return;
+    }
+  } catch (error) {
+    handleFailure("Coś poszło nie tak!");
+    console.error("err", error);
+  }
+}
+
+const handleSuccess = function () {
+  main.classList.add("blur");
+  popup.classList.add("showPopup");
+  setTimeout(() => {
+    main.classList.remove("blur");
+    popup.classList.remove("showPopup");
+    success.classList.add("show");
+    setTimeout(() => {
+      success.classList.remove("show");
+      window.location.href = "confirm.html";
+    }, 1500);
+  }, 1500);
+};
+
+const handleFailure = function (message) {
+  failed.innerHTML = message;
+  failed.classList.add("show");
+  setTimeout(() => {
+    failed.classList.remove("show");
+  }, 1500);
+};
